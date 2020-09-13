@@ -93,7 +93,7 @@ fun timeForHalfWay(
 ): Double {
     val halfDist = (t1 * v1 + t2 * v2 + t3 * v3) / 2
     val s1 = t1 * v1
-    val s2 = t2 * v3
+    val s2 = t2 * v2
     val s3 = t3 * v3
     return when {
         (s1 != 0.0) and ((halfDist < s1) or (halfDist == s1)) -> halfDist / v1
