@@ -72,7 +72,7 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
 fun ageDescription(age: Int): String {
     val part = age % 100
     return when {
-        (part in 5..20) or (part % 10 == 0) or (part % 10 in 5..9) -> "$age лет"
+        (part in 5..20) || (part % 10 == 0) || (part % 10 in 5..9) -> "$age лет"
         part % 10 in 2..4 -> "$age года"
         part % 10 == 1 -> "$age год"
         else -> "Error: Выход за заданные границы продолжительности жизни человека."
