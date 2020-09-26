@@ -91,12 +91,11 @@ fun fib(n: Int): Int {
     var a = 1
     var b = 1
     var res = 1
-    if (n > 2)
-        for (i in 3..n) {
-            res = a + b
-            a = b
-            b = res
-        }
+    for (i in 3..n) {
+        res = a + b
+        a = b
+        b = res
+    }
     return res
 }
 
@@ -123,7 +122,7 @@ fun minDivisor(n: Int): Int {
  */
 
 fun maxDivisor(n: Int): Int {
-    for (i in n - 1 downTo 2) {
+    for (i in n / 2 downTo 2) {
         if (n % i == 0) {
             return i
         }
@@ -220,11 +219,9 @@ fun hasDifferentDigits(n: Int): Boolean {
     when {
         n / 10 == 0 -> return false
         else -> {
-            var a: Int
             var num = n / 10
             while (num > 0) {
-                a = num % 10
-                if (a != n % 10) return true
+                if (num % 10 != n % 10) return true
                 num /= 10
             }
             return false
@@ -242,12 +239,12 @@ fun hasDifferentDigits(n: Int): Boolean {
  * Использовать kotlin.math.sin и другие стандартные реализации функции синуса в этой задаче запрещается.
  */
 fun sin(x: Double, eps: Double): Double {
-    val lilx = x % (2 * PI)
-    var part = lilx
-    var sum = lilx
+    val lilX = x % (2 * PI)
+    var part = lilX
+    var sum = lilX
     var multiplier = 2
     while (abs(part) >= eps) {
-        part = -part * sqr(lilx) / (multiplier * (multiplier + 1))
+        part = -part * sqr(lilX) / (multiplier * (multiplier + 1))
         sum += part
         multiplier += 2
     }
