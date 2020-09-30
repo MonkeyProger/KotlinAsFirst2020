@@ -387,7 +387,7 @@ fun rusConverter(x: Int, isThousand: Boolean): String {
         in 5..8 -> forComplex[(x / 10) % 10 - 1] + "десят"; 9 -> "девяносто"
         else -> ""
     }
-    if ((x / 10) % 10 != 0) res += " "
+    if (x % 10 != 0 && (x / 10) % 10 != 0) res += " "
     if (!isThousand && x % 10 == 0) return res
     res += if (isThousand) {
         when (x % 10) {
