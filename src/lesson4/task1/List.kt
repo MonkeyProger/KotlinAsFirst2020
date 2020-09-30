@@ -263,6 +263,7 @@ fun factorizeToString(n: Int): String = factorize(n).joinToString(separator = "*
  * например: n = 100, base = 4 -> (1, 2, 1, 0) или n = 250, base = 14 -> (1, 3, 12)
  */
 fun convert(n: Int, base: Int): List<Int> {
+    if (n == 0) return listOf(0)
     var x = n
     var res = listOf<Int>()
     while (x > 0) {
@@ -284,6 +285,7 @@ fun convert(n: Int, base: Int): List<Int> {
  * (например, n.toString(base) и подобные), запрещается.
  */
 fun convertToString(n: Int, base: Int): String {
+    if (n == 0) return "0"
     val con = convert(n, base)
     var res = ""
     for (i in con.indices) if (con[i] > 9) res += 'a' - 10 + con[i]
@@ -366,29 +368,27 @@ fun rusConverter(x: Int, isThousand: Boolean): String {
         "пять", "шесть", "семь", "восемь", "девять"
     )
     res += when (x / 100) {
-        1 -> "сто "; 2 -> "двести "; in 3..4 -> forComplex[x / 100 - 1] + "ста "
-        in 5..9 -> forComplex[x / 100 - 1] + "сот "; else -> ""
+        1 -> "сто"; 2 -> "двести"; in 3..4 -> forComplex[x / 100 - 1] + "ста"
+        in 5..9 -> forComplex[x / 100 - 1] + "сот"; else -> ""
     }
+    if (x / 100 != 0) res += " "
     res += when (x % 100) {
         10 -> "десять"; 11 -> "одиннадцать"; 12 -> "двенадцать"
         13 -> "тринадцать"; 14 -> "четырнадцать"; 15 -> "пятнадцать"
         16 -> "шестнадцать"; 17 -> "семнадцать"; 18 -> "восемнадцать"
         19 -> "девятнадцать"; else -> ""
     }
-
     when {
-        isThousand && x % 100 in 10..19 -> return res + " тысяч"
+        isThousand && x % 100 in 10..19 -> return "$res тысяч"
         !isThousand && x % 100 in 10..19 -> return res
     }
-
     res += when ((x / 10) % 10) {
-        2 -> "двадцать "; 3 -> "тридцать "; 4 -> "сорок "
-        in 5..8 -> forComplex[(x / 10) % 10 - 1] + "десят "; 9 -> "девяносто "
+        2 -> "двадцать"; 3 -> "тридцать"; 4 -> "сорок"
+        in 5..8 -> forComplex[(x / 10) % 10 - 1] + "десят"; 9 -> "девяносто"
         else -> ""
     }
-
+    if ((x / 10) % 10 != 0) res += " "
     if (!isThousand && x % 10 == 0) return res
-
     res += if (isThousand) {
         when (x % 10) {
             1 -> "одна тысяча"; 2 -> "две тысячи"
