@@ -221,12 +221,13 @@ fun accumulate(list: MutableList<Int>): MutableList<Int> =
 fun factorize(n: Int): List<Int> {
     val res = mutableListOf<Int>()
     var k = n
-    for (i in 2..n / 2 + 1) {
+    for (i in 2..sqrt(n.toDouble()).toInt() + 1) {
         while (k != 1 && k % i == 0) {
             res += i
             k /= i
         }
     }
+    if (res.isEmpty()) res += n
     return res.sorted()
 }
 
