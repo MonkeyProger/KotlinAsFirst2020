@@ -137,7 +137,7 @@ fun abs(v: List<Double>): Double = sqrt(v.fold(0.0) { a, el -> a + sqr(el) })
  * Рассчитать среднее арифметическое элементов списка list. Вернуть 0.0, если список пуст
  */
 fun mean(list: List<Double>): Double = if (list.isEmpty()) 0.0
-else list.fold(0.0) { a, el -> a + el } / list.size
+else list.sum() / list.size
 
 /**
  * Средняя (3 балла)
@@ -150,10 +150,6 @@ else list.fold(0.0) { a, el -> a + el } / list.size
 fun center(list: MutableList<Double>): MutableList<Double> =
     when {
         list.isEmpty() -> list
-        list.size == 1 -> {
-            list[0] = 0.0
-            list
-        }
         else -> {
             val m = mean(list)
             for (i in list.indices) {
@@ -170,16 +166,12 @@ fun center(list: MutableList<Double>): MutableList<Double> =
  * представленные в виде списков a и b. Скалярное произведение считать по формуле:
  * C = a1b1 + a2b2 + ... + aNbN. Произведение пустых векторов считать равным 0.
  */
-fun times(a: List<Int>, b: List<Int>): Int =
-    when {
-        a.isEmpty() && b.isEmpty() -> 0
-        else -> {
-            var c = 0
-            for (n in a.indices)
-                c += a[n] * b[n]
-            c
-        }
-    }
+fun times(a: List<Int>, b: List<Int>): Int {
+    var c = 0
+    for (n in a.indices)
+        c += a[n] * b[n]
+    return c
+}
 
 /**
  * Средняя (3 балла)
@@ -189,20 +181,15 @@ fun times(a: List<Int>, b: List<Int>): Int =
  * Коэффициенты многочлена заданы списком p: (p0, p1, p2, p3, ..., pN).
  * Значение пустого многочлена равно 0 при любом x.
  */
-fun polynom(p: List<Int>, x: Int): Int =
-    when {
-        p.isEmpty() -> 0
-        p.size == 1 -> p[0]
-        else -> {
-            var res = p[0]
-            var multipl = x
-            for (i in 1 until p.size) {
-                res += p[i] * multipl
-                multipl *= x
-            }
-            res
-        }
+fun polynom(p: List<Int>, x: Int): Int {
+    var res = 0
+    var multipl = 1
+    for (i in p) {
+        res += i * multipl
+        multipl *= x
     }
+    return res
+}
 
 /**
  * Средняя (3 балла)
@@ -235,11 +222,11 @@ fun accumulate(list: MutableList<Int>): MutableList<Int> =
  * Множители в списке должны располагаться по возрастанию.
  */
 fun factorize(n: Int): List<Int> {
-    var res = listOf<Int>()
+    val res = mutableListOf<Int>()
     var k = n
-    for (i in 2..n) {
-        while ((k != 1) && (k % i == 0)) {
-            res = res + i
+    for (i in 2..n / 2 + 1) {
+        while (k != 1 && k % i == 0) {
+            res += i
             k /= i
         }
     }
@@ -265,9 +252,9 @@ fun factorizeToString(n: Int): String = factorize(n).joinToString(separator = "*
 fun convert(n: Int, base: Int): List<Int> {
     if (n == 0) return listOf(0)
     var x = n
-    var res = listOf<Int>()
+    val res = mutableListOf<Int>()
     while (x > 0) {
-        res = res + x % base
+        res += +x % base
         x /= base
     }
     return res.reversed()
@@ -287,9 +274,11 @@ fun convert(n: Int, base: Int): List<Int> {
 fun convertToString(n: Int, base: Int): String {
     if (n == 0) return "0"
     val con = convert(n, base)
-    var res = ""
-    for (i in con.indices) if (con[i] > 9) res += 'a' - 10 + con[i]
-    else res += con[i]
+    val res: String
+    res = buildString {
+        for (i in con) if (i > 9) append('a' - 10 + i)
+        else append(i)
+    }
     return res
 }
 
@@ -348,17 +337,15 @@ fun romanConverter(n: Int): String =
  * 90 = XC, 100 = C, 400 = CD, 500 = D, 900 = CM, 1000 = M.
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
-fun roman(n: Int): String {
-    var res = ""
+fun roman(n: Int): String = buildString {
     var num = n
     val countArray = arrayOf(1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000)
     for (i in countArray.size - 1 downTo 0) {
         while (num >= countArray[i]) {
-            res += romanConverter(countArray[i])
+            append(romanConverter(countArray[i]))
             num -= countArray[i]
         }
     }
-    return res
 }
 
 fun rusConverter(x: Int, isThousand: Boolean): String {
