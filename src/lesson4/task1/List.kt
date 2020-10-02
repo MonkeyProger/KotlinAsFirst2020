@@ -147,17 +147,14 @@ else list.sum() / list.size
  *
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
-fun center(list: MutableList<Double>): MutableList<Double> =
-    when {
-        list.isEmpty() -> list
-        else -> {
-            val m = mean(list)
-            for (i in list.indices) {
-                list[i] -= m
-            }
-            list
-        }
+fun center(list: MutableList<Double>): MutableList<Double> {
+    val m = mean(list)
+    for (i in list.indices) {
+        list[i] -= m
     }
+    return list
+}
+
 
 /**
  * Средняя (3 балла)
@@ -355,8 +352,10 @@ fun rusConverter(x: Int, isThousand: Boolean): String {
         "пять", "шесть", "семь", "восемь", "девять"
     )
     res += when (x / 100) {
-        1 -> "сто"; 2 -> "двести"; in 3..4 -> forComplex[x / 100 - 1] + "ста"
-        in 5..9 -> forComplex[x / 100 - 1] + "сот"; else -> ""
+        1 -> "сто"; 2 -> "двести"
+        in 3..4 -> forComplex[x / 100 - 1] + "ста"
+        in 5..9 -> forComplex[x / 100 - 1] + "сот"
+        else -> ""
     }
     if (x / 100 != 0 && ((x / 10) % 10 != 0 || x % 10 != 0 || isThousand)) res += " "
     res += when (x % 100) {
@@ -375,15 +374,15 @@ fun rusConverter(x: Int, isThousand: Boolean): String {
         else -> ""
     }
     if (x % 10 != 0 && (x / 10) % 10 != 0 || isThousand && (x / 10) % 10 != 0) res += " "
-    if (!isThousand && x % 10 == 0) return res
-    res += if (isThousand) {
-        when (x % 10) {
+    res += when (isThousand) {
+        true -> when (x % 10) {
             1 -> "одна тысяча"; 2 -> "две тысячи"
             in 3..4 -> forComplex[x % 10 - 1] + " тысячи"
             in 5..9 -> forComplex[x % 10 - 1] + " тысяч"
             else -> "тысяч"
         }
-    } else forComplex[x % 10 - 1]
+        else -> if (x % 10 == 0) return res else forComplex[x % 10 - 1]
+    }
 
     return res
 }
