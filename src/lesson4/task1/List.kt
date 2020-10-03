@@ -370,29 +370,30 @@ fun rusConverter(x: Int, isThousand: Boolean): String = buildString {
             return@buildString
         }
         !isThousand && x % 100 in 10..19 -> return@buildString
+        else -> append(
+            when ((x / 10) % 10) {
+                2 -> "двадцать"; 3 -> "тридцать"; 4 -> "сорок"
+                in 5..8 -> forComplex[(x / 10) % 10 - 1] + "десят"
+                9 -> "девяносто"
+                else -> ""
+            },
+            if (x % 10 != 0 && (x / 10) % 10 != 0 || isThousand && (x / 10) % 10 != 0) " " else "",
+            when {
+                isThousand -> when (x % 10) {
+                    1 -> "одна тысяча"; 2 -> "две тысячи"
+                    in 3..4 -> forComplex[x % 10 - 1] + " тысячи"
+                    in 5..9 -> forComplex[x % 10 - 1] + " тысяч"
+                    else -> "тысяч"
+                }
+                else -> when (x % 10) {
+                    0 -> return@buildString
+                    else -> forComplex[x % 10 - 1]
+                }
+            }
+        )
     }
-    append(
-        when ((x / 10) % 10) {
-            2 -> "двадцать"; 3 -> "тридцать"; 4 -> "сорок"
-            in 5..8 -> forComplex[(x / 10) % 10 - 1] + "десят"
-            9 -> "девяносто"
-            else -> ""
-        },
-        if (x % 10 != 0 && (x / 10) % 10 != 0 || isThousand && (x / 10) % 10 != 0) " " else "",
-        when {
-            isThousand -> when (x % 10) {
-                1 -> "одна тысяча"; 2 -> "две тысячи"
-                in 3..4 -> forComplex[x % 10 - 1] + " тысячи"
-                in 5..9 -> forComplex[x % 10 - 1] + " тысяч"
-                else -> "тысяч"
-            }
-            else -> when (x % 10) {
-                0 -> return@buildString
-                else -> forComplex[x % 10 - 1]
-            }
-        }
-    )
 }
+
 
 /**
  * Очень сложная (7 баллов)
