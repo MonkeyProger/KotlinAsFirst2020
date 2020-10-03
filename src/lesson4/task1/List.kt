@@ -221,7 +221,7 @@ fun accumulate(list: MutableList<Int>): MutableList<Int> =
 fun factorize(n: Int): List<Int> {
     val res = mutableListOf<Int>()
     var k = n
-    for (i in 2..n / 2 + 1) {
+    for (i in 2..sqrt(n.toDouble()).toInt() + 1) {
         while (k != 1 && k % i == 0) {
             res += i
             k /= i
@@ -252,7 +252,7 @@ fun convert(n: Int, base: Int): List<Int> {
     var x = n
     val res = mutableListOf<Int>()
     while (x > 0) {
-        res += +x % base
+        res += x % base
         x /= base
     }
     return res.reversed()
@@ -272,12 +272,10 @@ fun convert(n: Int, base: Int): List<Int> {
 fun convertToString(n: Int, base: Int): String {
     if (n == 0) return "0"
     val con = convert(n, base)
-    val res: String
-    res = buildString {
+    return buildString {
         for (i in con) if (i > 9) append('a' - 10 + i)
         else append(i)
     }
-    return res
 }
 
 /**
@@ -346,46 +344,54 @@ fun roman(n: Int): String = buildString {
     }
 }
 
-fun rusConverter(x: Int, isThousand: Boolean): String {
-    var res = ""
+fun rusConverter(x: Int, isThousand: Boolean): String = buildString {
     val forComplex = arrayOf(
         "один", "два", "три", "четыре",
         "пять", "шесть", "семь", "восемь", "девять"
     )
-    res += when (x / 100) {
-        1 -> "сто"; 2 -> "двести"
-        in 3..4 -> forComplex[x / 100 - 1] + "ста"
-        in 5..9 -> forComplex[x / 100 - 1] + "сот"
-        else -> ""
-    }
-    if (x / 100 != 0 && ((x / 10) % 10 != 0 || x % 10 != 0 || isThousand)) res += " "
-    res += when (x % 100) {
-        10 -> "десять"; 11 -> "одиннадцать"; 12 -> "двенадцать"
-        13 -> "тринадцать"; 14 -> "четырнадцать"; 15 -> "пятнадцать"
-        16 -> "шестнадцать"; 17 -> "семнадцать"; 18 -> "восемнадцать"
-        19 -> "девятнадцать"; else -> ""
-    }
-    when {
-        isThousand && x % 100 in 10..19 -> return "$res тысяч"
-        !isThousand && x % 100 in 10..19 -> return res
-    }
-    res += when ((x / 10) % 10) {
-        2 -> "двадцать"; 3 -> "тридцать"; 4 -> "сорок"
-        in 5..8 -> forComplex[(x / 10) % 10 - 1] + "десят"; 9 -> "девяносто"
-        else -> ""
-    }
-    if (x % 10 != 0 && (x / 10) % 10 != 0 || isThousand && (x / 10) % 10 != 0) res += " "
-    res += when (isThousand) {
-        true -> when (x % 10) {
-            1 -> "одна тысяча"; 2 -> "две тысячи"
-            in 3..4 -> forComplex[x % 10 - 1] + " тысячи"
-            in 5..9 -> forComplex[x % 10 - 1] + " тысяч"
-            else -> "тысяч"
+    append(
+        when (x / 100) {
+            1 -> "сто"; 2 -> "двести"
+            in 3..4 -> forComplex[x / 100 - 1] + "ста"
+            in 5..9 -> forComplex[x / 100 - 1] + "сот"
+            else -> ""
+        },
+        if (x / 100 != 0 && ((x / 10) % 10 != 0 || x % 10 != 0 || isThousand)) " " else "",
+        when (x % 100) {
+            10 -> "десять"; 11 -> "одиннадцать"; 12 -> "двенадцать"
+            13 -> "тринадцать"; 14 -> "четырнадцать"; 15 -> "пятнадцать"
+            16 -> "шестнадцать"; 17 -> "семнадцать"; 18 -> "восемнадцать"
+            19 -> "девятнадцать"; else -> ""
         }
-        else -> if (x % 10 == 0) return res else forComplex[x % 10 - 1]
+    )
+    when {
+        isThousand && x % 100 in 10..19 -> {
+            append(" тысяч")
+            return@buildString
+        }
+        !isThousand && x % 100 in 10..19 -> return@buildString
     }
-
-    return res
+    append(
+        when ((x / 10) % 10) {
+            2 -> "двадцать"; 3 -> "тридцать"; 4 -> "сорок"
+            in 5..8 -> forComplex[(x / 10) % 10 - 1] + "десят"
+            9 -> "девяносто"
+            else -> ""
+        },
+        if (x % 10 != 0 && (x / 10) % 10 != 0 || isThousand && (x / 10) % 10 != 0) " " else "",
+        when {
+            isThousand -> when (x % 10) {
+                1 -> "одна тысяча"; 2 -> "две тысячи"
+                in 3..4 -> forComplex[x % 10 - 1] + " тысячи"
+                in 5..9 -> forComplex[x % 10 - 1] + " тысяч"
+                else -> "тысяч"
+            }
+            else -> when (x % 10) {
+                0 -> return@buildString
+                else -> forComplex[x % 10 - 1]
+            }
+        }
+    )
 }
 
 /**
