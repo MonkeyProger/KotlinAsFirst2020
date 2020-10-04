@@ -305,14 +305,12 @@ fun decimal(digits: List<Int>, base: Int): Int {
  * (например, str.toInt(base)), запрещается.
  */
 fun decimalFromString(str: String, base: Int): Int {
-    var res = 0
-    var digit: Int
+    var numbers = listOf<Int>()
     for (i in str.indices) {
-        digit = if (str[i] >= 'a') str[i] - 'a' + 10
+        numbers += if (str[i] >= 'a') str[i] - 'a' + 10
         else str[i] - '0'
-        res += digit * myPow(base, str.length - 1 - i)
     }
-    return res
+    return decimal(numbers, base)
 }
 
 fun romanConverter(n: Int): String =
