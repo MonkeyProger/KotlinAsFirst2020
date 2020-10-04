@@ -136,8 +136,7 @@ fun abs(v: List<Double>): Double = sqrt(v.fold(0.0) { a, el -> a + sqr(el) })
  *
  * Рассчитать среднее арифметическое элементов списка list. Вернуть 0.0, если список пуст
  */
-fun mean(list: List<Double>): Double = if (list.isEmpty()) 0.0
-else list.sum() / list.size
+fun mean(list: List<Double>): Double = if (list.isEmpty()) 0.0 else list.sum() / list.size
 
 /**
  * Средняя (3 балла)
@@ -221,7 +220,7 @@ fun accumulate(list: MutableList<Int>): MutableList<Int> =
 fun factorize(n: Int): List<Int> {
     val res = mutableListOf<Int>()
     var k = n
-    for (i in 2..sqrt(n.toDouble()).toInt() + 1) {
+    for (i in 2..n / 2 + 1) {
         while (k != 1 && k % i == 0) {
             res += i
             k /= i
@@ -369,31 +368,32 @@ fun rusConverter(x: Int, isThousand: Boolean): String = buildString {
             append(" тысяч")
             return@buildString
         }
-        !isThousand && x % 100 in 10..19 -> return@buildString
-        else -> append(
-            when ((x / 10) % 10) {
-                2 -> "двадцать"; 3 -> "тридцать"; 4 -> "сорок"
-                in 5..8 -> forComplex[(x / 10) % 10 - 1] + "десят"
-                9 -> "девяносто"
-                else -> ""
-            },
-            if (x % 10 != 0 && (x / 10) % 10 != 0 || isThousand && (x / 10) % 10 != 0) " " else "",
-            when {
-                isThousand -> when (x % 10) {
-                    1 -> "одна тысяча"; 2 -> "две тысячи"
-                    in 3..4 -> forComplex[x % 10 - 1] + " тысячи"
-                    in 5..9 -> forComplex[x % 10 - 1] + " тысяч"
-                    else -> "тысяч"
-                }
-                else -> when (x % 10) {
-                    0 -> return@buildString
-                    else -> forComplex[x % 10 - 1]
-                }
-            }
-        )
+        !isThousand && (x % 100 in 10..19) -> return@buildString
     }
+    append(
+        when ((x / 10) % 10) {
+            2 -> "двадцать"; 3 -> "тридцать"; 4 -> "сорок"
+            in 5..8 -> forComplex[(x / 10) % 10 - 1] + "десят"
+            9 -> "девяносто"
+            else -> ""
+        }
+    )
+    append(
+        if (x % 10 != 0 && (x / 10) % 10 != 0 || isThousand && (x / 10) % 10 != 0) " " else "",
+        when {
+            isThousand -> when (x % 10) {
+                1 -> "одна тысяча"; 2 -> "две тысячи"
+                in 3..4 -> forComplex[x % 10 - 1] + " тысячи"
+                in 5..9 -> forComplex[x % 10 - 1] + " тысяч"
+                else -> "тысяч"
+            }
+            else -> when (x % 10) {
+                0 -> return@buildString
+                else -> forComplex[x % 10 - 1]
+            }
+        }
+    )
 }
-
 
 /**
  * Очень сложная (7 баллов)
