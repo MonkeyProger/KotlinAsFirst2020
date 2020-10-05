@@ -96,7 +96,15 @@ fun buildWordSet(text: List<String>): MutableSet<String> {
  *   buildGrades(mapOf("Марат" to 3, "Семён" to 5, "Михаил" to 5))
  *     -> mapOf(5 to listOf("Семён", "Михаил"), 3 to listOf("Марат"))
  */
-fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> = TODO()
+fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
+    val res = mutableMapOf<Int, List<String>>()
+    for (i in 1..5) {
+        val names = mutableListOf<String>()
+        for ((name, grade) in grades) if (grade == i) names.add(name)
+        if (names.isNotEmpty()) res[i] = names
+    }
+    return res
+}
 
 /**
  * Простая (2 балла)
@@ -108,7 +116,12 @@ fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> = TODO()
  *   containsIn(mapOf("a" to "z"), mapOf("a" to "z", "b" to "sweet")) -> true
  *   containsIn(mapOf("a" to "z"), mapOf("a" to "zee", "b" to "sweet")) -> false
  */
-fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean = TODO()
+fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
+    a.forEach { (key) ->
+        if (!(key in b && a[key] == b[key])) return false
+    }
+    return true
+}
 
 /**
  * Простая (2 балла)
@@ -124,9 +137,10 @@ fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean = TODO()
  *   subtractOf(a = mutableMapOf("a" to "z"), mapOf("a" to "z"))
  *     -> a changes to mutableMapOf() aka becomes empty
  */
-fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) {
-    TODO()
-}
+fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) =
+    b.forEach { (key) ->
+        if (key in a && a[key] == b[key]) a -= key
+    }
 
 /**
  * Простая (2 балла)
@@ -135,7 +149,13 @@ fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) {
  * В выходном списке не должно быть повторяюихся элементов,
  * т. е. whoAreInBoth(listOf("Марат", "Семён, "Марат"), listOf("Марат", "Марат")) == listOf("Марат")
  */
-fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = TODO()
+fun whoAreInBoth(a: List<String>, b: List<String>): List<String> {
+    var res = listOf<String>()
+    for (el in a) {
+        if (el in b && el !in res) res = res + el
+    }
+    return res
+}
 
 /**
  * Средняя (3 балла)
@@ -154,7 +174,15 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = TODO()
  *     mapOf("Emergency" to "911", "Police" to "02")
  *   ) -> mapOf("Emergency" to "112, 911", "Police" to "02")
  */
-fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> = TODO()
+fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> {
+    val res = (mapA + mapB).toMutableMap()
+    mapA.forEach { (keyA, valueA) ->
+        mapB.forEach { (keyB, valueB) ->
+            if (keyA == keyB && valueA != valueB) res[keyA] = "$valueA, $valueB"
+        }
+    }
+    return res
+}
 
 /**
  * Средняя (4 балла)
@@ -166,7 +194,22 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
  *   averageStockPrice(listOf("MSFT" to 100.0, "MSFT" to 200.0, "NFLX" to 40.0))
  *     -> mapOf("MSFT" to 150.0, "NFLX" to 40.0)
  */
-fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> = TODO()
+fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
+    var res = mapOf<String, Double>()
+    for (i in stockPrices) {
+        if (i.first !in res) {
+            var sum = i.second
+            var amount = 1
+            for (k in stockPrices.size - 1 downTo stockPrices.indexOf(i) + 1)
+                if (i.first == stockPrices[k].first) {
+                    amount += 1
+                    sum += stockPrices[k].second
+                }
+            res = res + (i.first to (sum / amount))
+        }
+    }
+    return res
+}
 
 /**
  * Средняя (4 балла)
@@ -183,7 +226,17 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  *     "печенье"
  *   ) -> "Мария"
  */
-fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? = TODO()
+fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? {
+    var cheap = ""
+    var minValue = 9999.0
+    for ((name, type) in stuff) {
+        if (type.first == kind && type.second < minValue) {
+            cheap = name
+            minValue = type.second
+        }
+    }
+    return if (cheap != "") cheap else null
+}
 
 /**
  * Средняя (3 балла)
@@ -194,7 +247,11 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  * Например:
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
-fun canBuildFrom(chars: List<Char>, word: String): Boolean = TODO()
+fun canBuildFrom(chars: List<Char>, word: String): Boolean {
+    for (i in word)
+        if (i !in chars) return false
+    return true
+}
 
 /**
  * Средняя (4 балла)
@@ -208,7 +265,18 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean = TODO()
  * Например:
  *   extractRepeats(listOf("a", "b", "a")) -> mapOf("a" to 2)
  */
-fun extractRepeats(list: List<String>): Map<String, Int> = TODO()
+fun extractRepeats(list: List<String>): Map<String, Int> {
+    val res = mutableMapOf<String, Int>()
+    for (i in 0 until list.size - 1) {
+        if (!res.contains(list[i])) {
+            var amount = 1
+            for (k in i + 1 until list.size)
+                if (list[k] == list[i]) amount += 1
+            if (amount > 1) res += Pair(list[i], amount)
+        }
+    }
+    return res
+}
 
 /**
  * Средняя (3 балла)
@@ -222,7 +290,14 @@ fun extractRepeats(list: List<String>): Map<String, Int> = TODO()
  * Например:
  *   hasAnagrams(listOf("тор", "свет", "рот")) -> true
  */
-fun hasAnagrams(words: List<String>): Boolean = TODO()
+fun hasAnagrams(words: List<String>): Boolean {
+    for (i in 0 until words.size - 1)
+        for (k in i + 1 until words.size)
+            if (isAnagram(words[i], words[k])) return true
+    return false
+}
+
+fun isAnagram(x: String, y: String): Boolean = x.toCharArray().sorted() == y.toCharArray().sorted()
 
 /**
  * Сложная (5 баллов)
