@@ -98,7 +98,7 @@ fun buildWordSet(text: List<String>): MutableSet<String> {
  */
 fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
     val res = mutableMapOf<Int, List<String>>()
-    for (i in 1..5) {
+    for (i in 0..5) {
         val names = mutableListOf<String>()
         for ((name, grade) in grades) if (grade == i) names.add(name)
         if (names.isNotEmpty()) res[i] = names
@@ -227,6 +227,7 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  *   ) -> "Мария"
  */
 fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? {
+    if (kind == "") return ""
     var cheap = ""
     var minValue = 9999.0
     for ((name, type) in stuff) {
