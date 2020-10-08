@@ -220,7 +220,7 @@ fun accumulate(list: MutableList<Int>): MutableList<Int> =
 fun factorize(n: Int): List<Int> {
     val res = mutableListOf<Int>()
     var k = n
-    for (i in 2..n / 2 + 1) {
+    for (i in 2..sqrt(n.toDouble()).toInt() + 1) {
         while (k != 1 && k % i == 0) {
             res += i
             k /= i
@@ -305,7 +305,7 @@ fun decimal(digits: List<Int>, base: Int): Int {
  * (например, str.toInt(base)), запрещается.
  */
 fun decimalFromString(str: String, base: Int): Int {
-    var numbers = listOf<Int>()
+    val numbers = mutableListOf<Int>()
     for (i in str.indices) {
         numbers += if (str[i] >= 'a') str[i] - 'a' + 10
         else str[i] - '0'
@@ -346,6 +346,12 @@ fun rusConverter(x: Int, isThousand: Boolean): String = buildString {
         "один", "два", "три", "четыре",
         "пять", "шесть", "семь", "восемь", "девять"
     )
+    val forTens = arrayOf(
+        "десять", "одиннадцать", "двенадцать",
+        "тринадцать", "четырнадцать", "пятнадцать",
+        "шестнадцать", "семнадцать", "восемнадцать",
+        "девятнадцать"
+    )
     append(
         when (x / 100) {
             1 -> "сто"; 2 -> "двести"
@@ -354,12 +360,7 @@ fun rusConverter(x: Int, isThousand: Boolean): String = buildString {
             else -> ""
         },
         if (x / 100 != 0 && ((x / 10) % 10 != 0 || x % 10 != 0 || isThousand)) " " else "",
-        when (x % 100) {
-            10 -> "десять"; 11 -> "одиннадцать"; 12 -> "двенадцать"
-            13 -> "тринадцать"; 14 -> "четырнадцать"; 15 -> "пятнадцать"
-            16 -> "шестнадцать"; 17 -> "семнадцать"; 18 -> "восемнадцать"
-            19 -> "девятнадцать"; else -> ""
-        }
+        if (x % 100 in 10..19) forTens[x % 10] else ""
     )
     when {
         isThousand && x % 100 in 10..19 -> {
@@ -377,7 +378,7 @@ fun rusConverter(x: Int, isThousand: Boolean): String = buildString {
         }
     )
     append(
-        if (x % 10 != 0 && (x / 10) % 10 != 0 || isThousand && (x / 10) % 10 != 0) " " else "",
+        if ((x / 10) % 10 != 0 && (x % 10 != 0 || isThousand)) " " else "",
         when {
             isThousand -> when (x % 10) {
                 1 -> "одна тысяча"; 2 -> "две тысячи"
