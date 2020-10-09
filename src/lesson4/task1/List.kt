@@ -4,6 +4,7 @@ package lesson4.task1
 
 import lesson1.task1.discriminant
 import lesson1.task1.sqr
+import lesson3.task1.minDivisor
 import kotlin.math.sqrt
 
 // Урок 4: списки
@@ -220,14 +221,11 @@ fun accumulate(list: MutableList<Int>): MutableList<Int> =
 fun factorize(n: Int): List<Int> {
     val res = mutableListOf<Int>()
     var k = n
-    for (i in 2..sqrt(n.toDouble()).toInt() + 1) {
-        while (k != 1 && k % i == 0) {
-            res += i
-            k /= i
-        }
+    while (k > 1) {
+        res += minDivisor(k)
+        k /= minDivisor(k)
     }
-    if (res.isEmpty()) res += n
-    return res.sorted()
+    return res
 }
 
 /**
