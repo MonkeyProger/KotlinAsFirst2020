@@ -97,12 +97,9 @@ fun buildWordSet(text: List<String>): MutableSet<String> {
  *     -> mapOf(5 to listOf("Семён", "Михаил"), 3 to listOf("Марат"))
  */
 fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
-    val res = mutableMapOf<Int, List<String>>()
-    for (i in 0..5) {
-        val names = mutableListOf<String>()
-        for ((name, grade) in grades) if (grade == i) names.add(name)
-        if (names.isNotEmpty()) res[i] = names
-    }
+    val res = mutableMapOf<Int, MutableList<String>>()
+    for ((name, grade) in grades) if (!res.containsKey(grade)) res[grade] = mutableListOf(name) else
+        res[grade]?.add(name)
     return res
 }
 
@@ -117,9 +114,7 @@ fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
  *   containsIn(mapOf("a" to "z"), mapOf("a" to "zee", "b" to "sweet")) -> false
  */
 fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
-    a.forEach { (key) ->
-        if (!(key in b && a[key] == b[key])) return false
-    }
+    for ((key, value) in a) if (!(key in b && value == b[key])) return false
     return true
 }
 
@@ -150,11 +145,11 @@ fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) =
  * т. е. whoAreInBoth(listOf("Марат", "Семён, "Марат"), listOf("Марат", "Марат")) == listOf("Марат")
  */
 fun whoAreInBoth(a: List<String>, b: List<String>): List<String> {
-    var res = listOf<String>()
+    val res = mutableSetOf<String>()
     for (el in a) {
-        if (el in b && el !in res) res = res + el
+        if (el in b && el !in res) res.add(el)
     }
-    return res
+    return res.toList()
 }
 
 /**
@@ -176,10 +171,9 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> {
  */
 fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> {
     val res = (mapA + mapB).toMutableMap()
-    mapA.forEach { (keyA, valueA) ->
-        mapB.forEach { (keyB, valueB) ->
-            if (keyA == keyB && valueA != valueB) res[keyA] = "$valueA, $valueB"
-        }
+    mapB.forEach { (keyB, valueB) ->
+        val valueA = mapA[keyB]
+        if (mapA.containsKey(keyB)) if (valueA != valueB) res[keyB] = "$valueA, $valueB"
     }
     return res
 }
@@ -195,17 +189,12 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
  *     -> mapOf("MSFT" to 150.0, "NFLX" to 40.0)
  */
 fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
-    var res = mapOf<String, Double>()
-    for (i in stockPrices) {
-        if (i.first !in res) {
-            var sum = i.second
-            var amount = 1
-            for (k in stockPrices.size - 1 downTo stockPrices.indexOf(i) + 1)
-                if (i.first == stockPrices[k].first) {
-                    amount += 1
-                    sum += stockPrices[k].second
-                }
-            res = res + (i.first to (sum / amount))
+    val res = mutableMapOf<String, Double>()
+    for ((name) in stockPrices) {
+        if (name !in res) {
+            val amount = stockPrices.filter { (key) -> key == name }
+            val sum = amount.sumByDouble { it.second }
+            res += (name to (sum / amount.size))
         }
     }
     return res
@@ -227,9 +216,9 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  *   ) -> "Мария"
  */
 fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? {
-    if (kind == "") return ""
+    if (kind.isEmpty()) return ""
     var cheap = ""
-    var minValue = 9999.0
+    var minValue = Double.MAX_VALUE
     for ((name, type) in stuff) {
         if (type.first == kind && type.second < minValue) {
             cheap = name
@@ -250,7 +239,7 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  */
 fun canBuildFrom(chars: List<Char>, word: String): Boolean {
     for (i in word)
-        if (i !in chars) return false
+        if (i !in chars.toSet()) return false
     return true
 }
 
@@ -292,13 +281,15 @@ fun extractRepeats(list: List<String>): Map<String, Int> {
  *   hasAnagrams(listOf("тор", "свет", "рот")) -> true
  */
 fun hasAnagrams(words: List<String>): Boolean {
-    for (i in 0 until words.size - 1)
-        for (k in i + 1 until words.size)
-            if (isAnagram(words[i], words[k])) return true
+    val sortedWords = mutableListOf<String>()
+    for (word in words) {
+        if (word.toCharArray().sorted().toString() in sortedWords) return true
+        else sortedWords += word.toCharArray().sorted().toString()
+    }
     return false
 }
 
-fun isAnagram(x: String, y: String): Boolean = x.toCharArray().sorted() == y.toCharArray().sorted()
+//fun isAnagram(x: String, y: String): Boolean = x.toCharArray().sorted() == y.toCharArray().sorted()
 
 /**
  * Сложная (5 баллов)
@@ -334,7 +325,20 @@ fun isAnagram(x: String, y: String): Boolean = x.toCharArray().sorted() == y.toC
  *          "GoodGnome" to setOf()
  *        )
  */
-fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> = TODO()
+fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
+    /**
+     *     -_-WORK IN PROCESS-_-
+     */
+    val res = friends.toMutableMap()
+    for ((name, contacts) in friends) {
+        for (i in contacts) {
+            if (!friends.containsKey(i)) res += Pair(name, setOf()) else {
+                if (!res[i]!!.contains(name)) res[i]?.union(name.toSet())
+            }
+        }
+    }
+    return res
+}
 
 /**
  * Сложная (6 баллов)
@@ -353,7 +357,15 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   findSumOfTwo(listOf(1, 2, 3), 4) -> Pair(0, 2)
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
-fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> = TODO()
+fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
+    for (i in 0 until list.size - 1) {
+        for (k in i + 1 until list.size) {
+            if (number == list[i] + list[k])
+                return Pair(i, k)
+        }
+    }
+    return Pair(-1, -1)
+}
 
 /**
  * Очень сложная (8 баллов)
