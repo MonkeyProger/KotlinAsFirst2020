@@ -2,8 +2,6 @@
 
 package lesson5.task1
 
-import ru.spbstu.wheels.sorted
-
 // Урок 5: ассоциативные массивы и множества
 // Максимальное количество баллов = 14
 // Рекомендуемое количество баллов = 9
@@ -148,8 +146,9 @@ fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) =
  */
 fun whoAreInBoth(a: List<String>, b: List<String>): List<String> {
     val res = mutableSetOf<String>()
+    val setB = b.toSet()
     for (el in a) {
-        if (el in b.toSet() && el !in res) res.add(el)
+        if (el in setB && el !in res) res.add(el)
     }
     return res.toList()
 }
@@ -208,8 +207,7 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  *   ) -> "Мария"
  */
 fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? {
-    if (kind.isEmpty()) return null
-    var cheap = ""
+    var cheap: String? = null
     var minValue = Double.MAX_VALUE
     for ((name, type) in stuff) {
         if (type.first == kind && type.second < minValue) {
@@ -217,7 +215,7 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
             minValue = type.second
         }
     }
-    return if (cheap != "") cheap else null
+    return cheap
 }
 
 /**
@@ -230,8 +228,10 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
 fun canBuildFrom(chars: List<Char>, word: String): Boolean {
-    for (i in word)
-        if (i.toLowerCase() !in chars.toSet()) return false
+    val stringChar = chars.toString().toLowerCase()
+    val lowerWord = word.toLowerCase()
+    for (i in lowerWord)
+        if (i !in stringChar) return false
     return true
 }
 
@@ -262,10 +262,12 @@ fun extractRepeats(list: List<String>): Map<String, Int> = TODO()
  *   hasAnagrams(listOf("тор", "свет", "рот")) -> true
  */
 fun hasAnagrams(words: List<String>): Boolean {
-    val sortedWords = mutableListOf<CharArray>()
-    for (word in words.toSet()) {
-        if (word.toCharArray().sorted().toCharArray() in sortedWords) return true
-        else sortedWords.add(word.toCharArray().sorted().toCharArray())
+    val wordsSet = words.toSet()
+    val sortedWords = mutableSetOf<List<Char>>()
+    for (word in wordsSet) {
+        val newWord = word.toList().sorted()
+        if (newWord in sortedWords) return true
+        else sortedWords.add(newWord)
     }
     return false
 }
@@ -324,8 +326,9 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
+    val setList = list.toSet()
     for (i in 0 until list.size - 1) {
-        if (number - list[i] in list.toSet())
+        if (number - list[i] in setList)
             return Pair(i, list.indexOf(number - list[i]))
     }
     return Pair(-1, -1)
