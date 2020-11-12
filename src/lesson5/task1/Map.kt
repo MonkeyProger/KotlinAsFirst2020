@@ -98,8 +98,7 @@ fun buildWordSet(text: List<String>): MutableSet<String> {
  */
 fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
     val res = mutableMapOf<Int, MutableList<String>>()
-    for ((name, grade) in grades) if (grade !in res) res[grade] = mutableListOf(name) else
-        res[grade]?.add(name)
+    for ((name, grade) in grades) res[grade] = (res.getOrPut(grade) { mutableListOf() } + name) as MutableList<String>
     return res
 }
 
@@ -208,7 +207,7 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  */
 fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? {
     var cheap: String? = null
-    var minValue = Double.MAX_VALUE
+    var minValue = Double.MAX_VALUE + 1
     for ((name, type) in stuff) {
         if (type.first == kind && type.second < minValue) {
             cheap = name
@@ -228,10 +227,10 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
 fun canBuildFrom(chars: List<Char>, word: String): Boolean {
-    val stringChar = chars.toString().toLowerCase()
-    val lowerWord = word.toLowerCase()
+    val setChar = chars.map { it.toLowerCase() }.toSet()
+    val lowerWord = word.toLowerCase().toSet()
     for (i in lowerWord)
-        if (i !in stringChar) return false
+        if (!setChar.contains(i)) return false
     return true
 }
 
@@ -262,9 +261,8 @@ fun extractRepeats(list: List<String>): Map<String, Int> = TODO()
  *   hasAnagrams(listOf("тор", "свет", "рот")) -> true
  */
 fun hasAnagrams(words: List<String>): Boolean {
-    val wordsSet = words.toSet()
     val sortedWords = mutableSetOf<List<Char>>()
-    for (word in wordsSet) {
+    for (word in words) {
         val newWord = word.toList().sorted()
         if (newWord in sortedWords) return true
         else sortedWords.add(newWord)
@@ -326,10 +324,11 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
-    val setList = list.toSet()
-    for (i in 0 until list.size - 1) {
-        if (number - list[i] in setList)
-            return Pair(i, list.indexOf(number - list[i]))
+    val mapList = mutableMapOf<Int, Int>()
+    for ((key, value) in list.withIndex()) {
+        if (mapList.containsKey(number - value))
+            return Pair(mapList[number - value], key) as Pair<Int, Int>
+        if (!mapList.containsKey(value)) mapList[value] = key
     }
     return Pair(-1, -1)
 }
