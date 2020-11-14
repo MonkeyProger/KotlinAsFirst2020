@@ -2,6 +2,9 @@
 
 package lesson6.task1
 
+import lesson2.task2.daysInMonth
+import java.lang.NumberFormatException
+
 // Урок 6: разбор строк, исключения
 // Максимальное количество баллов = 13
 // Рекомендуемое количество баллов = 11
@@ -62,6 +65,14 @@ fun main() {
     }
 }
 
+fun monthStrToDigit(month: String): Int =
+    when (month) {
+        "января" -> 1; "февраля" -> 2; "марта" -> 3
+        "апреля" -> 4; "мая" -> 5; "июня" -> 6
+        "июля" -> 7; "августа" -> 8; "сентября" -> 9
+        "октября" -> 10; "ноября" -> 11; "декабря" -> 12
+        else -> 13
+    }
 
 /**
  * Средняя (4 балла)
@@ -74,7 +85,14 @@ fun main() {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
-fun dateStrToDigit(str: String): String = TODO()
+fun dateStrToDigit(str: String): String {
+    val parts = str.split(" ")
+    val day = parts[1].toInt()
+    val month = monthStrToDigit(parts[2])
+    val year = parts[3].toInt()
+    return if (parts.size < 3 || day > daysInMonth(month, year)) ""
+    else String.format("%02d.%02d.%04d", day, month, year)
+}
 
 /**
  * Средняя (4 балла)
@@ -114,7 +132,11 @@ fun flattenPhoneNumber(phone: String): String = TODO()
  * Прочитать строку и вернуть максимальное присутствующее в ней число (717 в примере).
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
-fun bestLongJump(jumps: String): Int = TODO()
+fun bestLongJump(jumps: String): Int {
+    val listMatchedJumps = "^((\\d+|[%-]) )*(\\d+|[%-])\$".toRegex().findAll(jumps)
+    return if (listMatchedJumps.toList().isEmpty()) -1 else
+        listMatchedJumps.maxOf { it.value.filter { it.isDigit() }.toInt() }
+}
 
 /**
  * Сложная (6 баллов)
@@ -127,7 +149,11 @@ fun bestLongJump(jumps: String): Int = TODO()
  * При нарушении формата входной строки, а также в случае отсутствия удачных попыток,
  * вернуть -1.
  */
-fun bestHighJump(jumps: String): Int = TODO()
+fun bestHighJump(jumps: String): Int {
+    val listMatchedJumps = "\\d+\\s+\\+".toRegex().findAll(jumps)
+    return if (listMatchedJumps.toList().isEmpty()) -1 else
+        listMatchedJumps.maxOf { it.value.filter { it.isDigit() }.toInt() }
+}
 
 /**
  * Сложная (6 баллов)
@@ -138,7 +164,34 @@ fun bestHighJump(jumps: String): Int = TODO()
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int = TODO()
+fun plusMinus(expression: String): Int {
+    var result = 0
+    try {
+        if (expression.matches(Regex("^(\\d+(\\s*[+-]\\s*\\d+)*)\$"))) throw IllegalArgumentException("") else {
+            val setStr = expression.split(" ").toString().toSet()
+            var n = 0
+            var step = 1
+            var mod = 1
+            for (i in setStr) {
+                when (i) {
+                    '-' -> {
+                        result += n * mod; mod = -1; n = 0; step = 1
+                    }
+                    '+' -> {
+                        result += n * mod; mod = 1; n = 0; step = 1
+                    }
+                    else -> {
+                        n = n * step + i.toInt(); step *= 10
+                    }
+                }
+                result += n * mod
+            }
+        }
+    } catch (e: NumberFormatException) {
+        throw java.lang.IllegalArgumentException("")
+    }
+    return result
+}
 
 /**
  * Сложная (6 баллов)
