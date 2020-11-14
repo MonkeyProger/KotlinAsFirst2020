@@ -85,14 +85,7 @@ fun monthStrToDigit(month: String): Int =
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
-fun dateStrToDigit(str: String): String {
-    val parts = str.split(" ")
-    val day = parts[1].toInt()
-    val month = monthStrToDigit(parts[2])
-    val year = parts[3].toInt()
-    return if (parts.size < 3 || day > daysInMonth(month, year)) ""
-    else String.format("%02d.%02d.%04d", day, month, year)
-}
+fun dateStrToDigit(str: String): String = TODO()
 
 /**
  * Средняя (4 балла)
@@ -133,9 +126,11 @@ fun flattenPhoneNumber(phone: String): String = TODO()
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
 fun bestLongJump(jumps: String): Int {
-    val listMatchedJumps = "^((\\d+|[%-]) )*(\\d+|[%-])\$".toRegex().findAll(jumps)
-    return if (listMatchedJumps.toList().isEmpty()) -1 else
-        listMatchedJumps.maxOf { it.value.filter { it.isDigit() }.toInt() }
+    return if (!jumps.matches(Regex("^((\\d+|[%-]) )*(\\d+|[%-])\$"))) -1 else {
+        val listMatchedJumps = "\\d".toRegex().findAll(jumps)
+        if (listMatchedJumps.toList().isEmpty()) -1 else
+            listMatchedJumps.maxOf { it.value.filter { it.isDigit() }.toInt() }
+    }
 }
 
 /**
