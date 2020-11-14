@@ -98,7 +98,7 @@ fun buildWordSet(text: List<String>): MutableSet<String> {
  */
 fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
     val res = mutableMapOf<Int, MutableList<String>>()
-    for ((name, grade) in grades) res[grade] = (res.getOrPut(grade) { mutableListOf() } + name) as MutableList<String>
+    for ((name, grade) in grades) res.getOrPut(grade) { mutableListOf() } += name
     return res
 }
 
@@ -207,11 +207,11 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  */
 fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? {
     var cheap: String? = null
-    var minValue = Double.MAX_VALUE + 1
+    var minValue = Double.MAX_VALUE.toFloat()
     for ((name, type) in stuff) {
         if (type.first == kind && type.second < minValue) {
             cheap = name
-            minValue = type.second
+            minValue = type.second.toFloat()
         }
     }
     return cheap
@@ -230,7 +230,7 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean {
     val setChar = chars.map { it.toLowerCase() }.toSet()
     val lowerWord = word.toLowerCase().toSet()
     for (i in lowerWord)
-        if (!setChar.contains(i)) return false
+        if (i !in setChar) return false
     return true
 }
 
@@ -326,7 +326,7 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     val mapList = mutableMapOf<Int, Int>()
     for ((key, value) in list.withIndex()) {
-        if (mapList.containsKey(number - value))
+        if (number - value in mapList)
             return Pair(mapList[number - value], key) as Pair<Int, Int>
         if (!mapList.containsKey(value)) mapList[value] = key
     }
