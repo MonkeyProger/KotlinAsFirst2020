@@ -162,7 +162,7 @@ fun bestHighJump(jumps: String): Int {
 fun plusMinus(expression: String): Int {
     var result = 0
     try {
-        if (expression.matches(Regex("^(\\d+(\\s*[+-]\\s*\\d+)*)\$"))) throw IllegalArgumentException("") else {
+        if (!expression.matches(Regex("^(\\d+(\\s*[+-]\\s*\\d+)*)\$"))) throw IllegalArgumentException("") else {
             val setStr = expression.split(" ").toString().toSet()
             var n = 0
             var step = 1
