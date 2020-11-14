@@ -163,24 +163,21 @@ fun plusMinus(expression: String): Int {
     var result = 0
     try {
         if (!expression.matches(Regex("^(\\d+(\\s*[+-]\\s*\\d+)*)\$"))) throw IllegalArgumentException("") else {
-            val setStr = expression.split(" ").toString().toSet()
+            val listStr = expression.split(" ")
             var n = 0
-            var step = 1
             var mod = 1
-            for (i in setStr) {
+            for (i in listStr) {
                 when (i) {
-                    '-' -> {
-                        result += n * mod; mod = -1; n = 0; step = 1
+                    "-" -> {
+                        result += n * mod; mod = -1; n = 0
                     }
-                    '+' -> {
-                        result += n * mod; mod = 1; n = 0; step = 1
+                    "+" -> {
+                        result += n * mod; mod = 1; n = 0
                     }
-                    else -> {
-                        n = n * step + i.toInt(); step *= 10
-                    }
+                    else -> n += i.toInt()
                 }
-                result += n * mod
             }
+            result += n * mod
         }
     } catch (e: NumberFormatException) {
         throw java.lang.IllegalArgumentException("")
