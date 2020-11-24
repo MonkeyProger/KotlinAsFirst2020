@@ -207,11 +207,11 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  */
 fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? {
     var cheap: String? = null
-    var minValue = Double.MAX_VALUE.toFloat()
+    var minValue = Double.POSITIVE_INFINITY
     for ((name, type) in stuff) {
         if (type.first == kind && type.second < minValue) {
             cheap = name
-            minValue = type.second.toFloat()
+            minValue = type.second
         }
     }
     return cheap
@@ -327,9 +327,9 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     val mapList = mutableMapOf<Int, Int>()
     for ((key, value) in list.withIndex()) {
         val newValue = mapList[number - value]
-        if (number - value in mapList && newValue != null)
+        if (newValue != null)
             return Pair(newValue, key)
-        if (!mapList.containsKey(value)) mapList[value] = key
+        if (key !in mapList) mapList[value] = key
     }
     return Pair(-1, -1)
 }
