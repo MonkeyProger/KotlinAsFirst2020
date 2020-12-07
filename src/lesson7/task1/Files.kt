@@ -81,20 +81,15 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
     val substrSet = substrings.toSet()
     for (el in substrSet) res[el] = 0
 
-    fun stringCounter(needed: String, searchArea: String): Int {
-        var res = 0
-        var count = searchArea.indexOf(needed)
-        while (count != -1) {
-            count = searchArea.indexOf(needed, count + 1)
-            res++
-        }
-        return res
-    }
-
     File(inputName).bufferedReader().use {
         it.forEachLine { line ->
-            for (el in substrSet)
-                res[el] = res[el]!! + stringCounter(el.toLowerCase(), line.toLowerCase())
+            for (el in substrSet) {
+                var count = line.toLowerCase().indexOf(el.toLowerCase())
+                while (count != -1) {
+                    count = line.toLowerCase().indexOf(el.toLowerCase(), count + 1)
+                    res[el] = res[el]!! + 1
+                }
+            }
         }
     }
     return res
