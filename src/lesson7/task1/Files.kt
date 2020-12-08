@@ -513,7 +513,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
                 spaceBeg -= if (zeroCheck.length == digitNumber(part)) 1 else 0
                 it.write("${" ".repeat(spaceBeg)}-$part\n")
                 it.write("${" ".repeat(spaceBeg)}${"-".repeat(digitNumber(part) + 1)}\n")
-                if (part != 0) spaceBeg += spaceChecker(subtrahend, part) else if (subtrahend == 0) spaceBeg++
+                if (part != 0) spaceBeg += spaceChecker(subtrahend, part) else spaceBeg++
                 subtrahend -= part
                 zeroCheck = subtrahend.toString()
                 check++
