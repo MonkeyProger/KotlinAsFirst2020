@@ -479,53 +479,61 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         var subtrahend = 0
         var zeroCheck = ""
 
-        fun spaceChecker(subtrahend: Int, minuend: Int): Int =
-            1 + digitNumber(subtrahend) - digitNumber(subtrahend - minuend)
+        if (res == 0 && lhv > 9) {
+            it.write("$lhv | $rhv\n")
+            it.write("${" ".repeat(digitNumber(lhv) -2)}-0 | 0\n")
+            it.write("${"-".repeat(digitNumber(lhv))}\n")
+            it.write("$lhv")
+        } else {
 
-        //Проверка пробелов в 1части 2строки
-        var check = 0
-        for (i in 0 until numLhv.size + 1) {
-            if (lhvPart < part) {
-                lhvPart = lhvPart * 10 + numLhv[i]
-                check++
-            } else {
-                spaceBeg = if (digitNumber(lhvPart) == digitNumber(part)) 0 else 1
-                spaceEnd = digitNumber(lhv) - digitNumber(part) + 3
-                subtrahend = lhvPart - part
-                zeroCheck = subtrahend.toString()
-                break
+            fun spaceChecker(subtrahend: Int, minuend: Int): Int =
+                1 + digitNumber(subtrahend) - digitNumber(subtrahend - minuend)
+
+            //Проверка пробелов в 1части 2строки
+            var check = 0
+            for (i in 0 until numLhv.size + 1) {
+                if (lhvPart < part) {
+                    lhvPart = lhvPart * 10 + numLhv[i]
+                    check++
+                } else {
+                    spaceBeg = if (digitNumber(lhvPart) == digitNumber(part)) 0 else 1
+                    spaceEnd = digitNumber(lhv) - digitNumber(part) + 3
+                    subtrahend = lhvPart - part
+                    zeroCheck = subtrahend.toString()
+                    break
+                }
             }
-        }
 
-        //Составление 1 части
-        it.write(" $lhv | $rhv\n")
-        it.write("${" ".repeat(spaceBeg)}-$part${" ".repeat(spaceEnd)}$res\n")
-        it.write("${" ".repeat(spaceBeg)}${"-".repeat(digitNumber(part) + 1)}\n")
-        spaceBeg += spaceChecker(lhvPart, part)
+            //Составление 1 части
+            it.write(" $lhv | $rhv\n")
+            it.write("${" ".repeat(spaceBeg)}-$part${" ".repeat(spaceEnd)}$res\n")
+            it.write("${" ".repeat(spaceBeg)}${"-".repeat(digitNumber(part) + 1)}\n")
+            spaceBeg += spaceChecker(lhvPart, part)
 
-        //Составление 2 внутренней части
-        for (j in 1 until numRes.size) {
-            part = rhv * numRes[j]
-            for (k in check..digitNumber(lhv)) {
-                subtrahend = subtrahend * 10 + numLhv[k]
-                zeroCheck += numLhv[k].toString()
-                it.write("${" ".repeat(spaceBeg)}$zeroCheck\n")
-                spaceBeg -= if (zeroCheck.length == digitNumber(part)) 1 else 0
-                it.write("${" ".repeat(spaceBeg)}-$part\n")
-                it.write("${" ".repeat(spaceBeg)}${"-".repeat(digitNumber(part) + 1)}\n")
-                if (part != 0) spaceBeg += spaceChecker(subtrahend, part) else if (subtrahend == 0) spaceBeg++
-                subtrahend -= part
-                zeroCheck = subtrahend.toString()
-                check++
-                break
+            //Составление 2 внутренней части
+            for (j in 1 until numRes.size) {
+                part = rhv * numRes[j]
+                for (k in check..digitNumber(lhv)) {
+                    subtrahend = subtrahend * 10 + numLhv[k]
+                    zeroCheck += numLhv[k].toString()
+                    it.write("${" ".repeat(spaceBeg)}$zeroCheck\n")
+                    spaceBeg -= if (zeroCheck.length == digitNumber(part)) 1 else 0
+                    it.write("${" ".repeat(spaceBeg)}-$part\n")
+                    it.write("${" ".repeat(spaceBeg)}${"-".repeat(digitNumber(part) + 1)}\n")
+                    if (part != 0) spaceBeg += spaceChecker(subtrahend, part) else if (subtrahend == 0) spaceBeg++
+                    subtrahend -= part
+                    zeroCheck = subtrahend.toString()
+                    check++
+                    break
+                }
             }
-        }
 
-        //Составление 3 части заключения
-        subtrahend+=part
-        zeroCheck=subtrahend.toString()
-        spaceBeg -= if (zeroCheck.length == digitNumber(part)) 0 else 1
-        it.write("${" ".repeat(spaceBeg)}$mod")
+            //Составление 3 части заключения
+            subtrahend += part
+            zeroCheck = subtrahend.toString()
+            spaceBeg -= if (zeroCheck.length == digitNumber(part)) 0 else 1
+            it.write("${" ".repeat(spaceBeg)}$mod")
+        }
     }
 }
 
