@@ -470,7 +470,6 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     File(outputName).bufferedWriter().use {
         var lhvPart = 0
         val res = lhv / rhv
-        val mod = lhv % rhv
         val numRes = res.toString().map { it.toString().toInt() }
         val numLhv = lhv.toString().map { it.toString().toInt() }
         var part = rhv * numRes[0]
@@ -478,6 +477,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         var spaceEnd = 0
         var subtrahend = 0
         var zeroCheck = ""
+        var edge:Int
 
         if (res == 0 && lhv > 9) {
             it.write("$lhv | $rhv\n")
@@ -517,9 +517,13 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
                     subtrahend = subtrahend * 10 + numLhv[k]
                     zeroCheck += numLhv[k].toString()
                     it.write("${" ".repeat(spaceBeg)}$zeroCheck\n")
-                    spaceBeg -= if (zeroCheck.length == digitNumber(part)) 1 else 0
+                    spaceBeg -= if (zeroCheck.length == digitNumber(part)) 1 else -zeroCheck.length+digitNumber(part)+1
                     it.write("${" ".repeat(spaceBeg)}-$part\n")
-                    it.write("${" ".repeat(spaceBeg)}${"-".repeat(digitNumber(part) + 1)}\n")
+                    if (zeroCheck.length != digitNumber(part)) {
+                        spaceBeg -= zeroCheck.length - digitNumber(part) - 1
+                        edge = zeroCheck.length
+                    } else edge = digitNumber(part) + 1
+                    it.write("${" ".repeat(spaceBeg)}${"-".repeat(edge)}\n")
                     if (part != 0) spaceBeg += spaceChecker(subtrahend, part) else if (subtrahend == 0) spaceBeg++
                     subtrahend -= part
                     zeroCheck = subtrahend.toString()
@@ -532,7 +536,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
             subtrahend += part
             zeroCheck = subtrahend.toString()
             spaceBeg -= if (zeroCheck.length == digitNumber(part)) 0 else 1
-            it.write("${" ".repeat(spaceBeg)}$mod")
+            it.write("${" ".repeat(spaceBeg)}${lhv % rhv}")
         }
     }
 }
