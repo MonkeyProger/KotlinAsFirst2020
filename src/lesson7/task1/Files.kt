@@ -524,7 +524,10 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
                         edge = zeroCheck.length
                     } else edge = digitNumber(part) + 1
                     it.write("${" ".repeat(spaceBeg)}${"-".repeat(edge)}\n")
-                    if (part != 0) spaceBeg += spaceChecker(subtrahend, part) else if (subtrahend < 10) spaceBeg++
+                    if (part != 0) {
+                        spaceBeg += spaceChecker(subtrahend, part)
+                        if (subtrahend > 9 && zeroCheck.length == digitNumber(part) + 1) spaceBeg--
+                    } else if (subtrahend < 10) spaceBeg++
                     subtrahend -= part
                     zeroCheck = subtrahend.toString()
                     check++
