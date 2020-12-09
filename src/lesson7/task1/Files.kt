@@ -481,7 +481,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
 
         if (res == 0 && lhv > 9) {
             it.write("$lhv | $rhv\n")
-            it.write("${" ".repeat(digitNumber(lhv) -2)}-0 | 0\n")
+            it.write("${" ".repeat(digitNumber(lhv) -2)}-0   0\n")
             it.write("${"-".repeat(digitNumber(lhv))}\n")
             it.write("$lhv")
         } else {
