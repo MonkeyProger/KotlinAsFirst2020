@@ -524,7 +524,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
                         edge = zeroCheck.length
                     } else edge = digitNumber(part) + 1
                     it.write("${" ".repeat(spaceBeg)}${"-".repeat(edge)}\n")
-                    if (part != 0) spaceBeg += spaceChecker(subtrahend, part) else if (subtrahend == 0) spaceBeg++
+                    if (part != 0) spaceBeg += spaceChecker(subtrahend, part) else if (subtrahend < 10) spaceBeg++
                     subtrahend -= part
                     zeroCheck = subtrahend.toString()
                     check++
@@ -535,7 +535,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
             //Составление 3 части заключения
             subtrahend += part
             zeroCheck = subtrahend.toString()
-            spaceBeg -= if (zeroCheck.length == digitNumber(part) || part ==0) 0 else 1
+            spaceBeg -= if (zeroCheck.length == digitNumber(part) || part == 0) 0 else 1
             it.write("${" ".repeat(spaceBeg)}${lhv % rhv}")
         }
     }
