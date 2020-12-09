@@ -497,7 +497,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
                     check++
                 } else {
                     spaceBeg = if (digitNumber(lhvPart) == digitNumber(part)) 0 else 1
-                    spaceEnd = digitNumber(lhv) - digitNumber(part) + 3
+                    spaceEnd = digitNumber(lhv) - digitNumber(lhvPart) + 3
                     subtrahend = lhvPart - part
                     zeroCheck = subtrahend.toString()
                     break
