@@ -533,6 +533,9 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
             }
 
             //Составление 3 части заключения
+            subtrahend += part
+            zeroCheck = subtrahend.toString()
+            spaceBeg -= if (zeroCheck.length == digitNumber(part)) 0 else 1
             it.write("${" ".repeat(spaceBeg)}${lhv % rhv}")
         }
     }
