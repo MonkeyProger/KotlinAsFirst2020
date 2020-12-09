@@ -496,7 +496,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
                     lhvPart = lhvPart * 10 + numLhv[i]
                     check++
                 } else {
-                    spaceBeg = if (digitNumber(lhvPart) == digitNumber(part)) 0 else 1
+                    spaceBeg = if (digitNumber(lhvPart) == digitNumber(part) + 1) 0 else 1
                     spaceEnd = digitNumber(lhv) - digitNumber(lhvPart) + 3
                     subtrahend = lhvPart - part
                     zeroCheck = subtrahend.toString()
@@ -505,7 +505,9 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
             }
 
             //Составление 1 части
-            it.write(" $lhv | $rhv\n")
+            it.write("${" ".repeat(spaceBeg)}$lhv | $rhv\n")
+            spaceBeg -= if (digitNumber(lhvPart) == digitNumber(part)) 1 else
+                -digitNumber(lhvPart) + digitNumber(part) + 1
             it.write("${" ".repeat(spaceBeg)}-$part${" ".repeat(spaceEnd)}$res\n")
             it.write("${" ".repeat(spaceBeg)}${"-".repeat(digitNumber(part) + 1)}\n")
             spaceBeg += spaceChecker(lhvPart, part)
@@ -526,7 +528,8 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
                     it.write("${" ".repeat(spaceBeg)}${"-".repeat(edge)}\n")
                     if (part != 0) {
                         spaceBeg += spaceChecker(subtrahend, part)
-                        if (subtrahend > 9 && zeroCheck.length == digitNumber(part) + 1) spaceBeg--
+                        if (subtrahend > 9 && zeroCheck.length == digitNumber(part) + 1 && subtrahend - part != 0)
+                            spaceBeg--
                     } else if (subtrahend < 10) spaceBeg++
                     subtrahend -= part
                     zeroCheck = subtrahend.toString()
