@@ -477,11 +477,11 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         var spaceEnd = 0
         var subtrahend = 0
         var zeroCheck = ""
-        var edge:Int
+        var edge: Int
 
         if (res == 0 && lhv > 9) {
             it.write("$lhv | $rhv\n")
-            it.write("${" ".repeat(digitNumber(lhv) -2)}-0   0\n")
+            it.write("${" ".repeat(digitNumber(lhv) - 2)}-0   0\n")
             it.write("${"-".repeat(digitNumber(lhv))}\n")
             it.write("$lhv")
         } else {
@@ -517,7 +517,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
                     subtrahend = subtrahend * 10 + numLhv[k]
                     zeroCheck += numLhv[k].toString()
                     it.write("${" ".repeat(spaceBeg)}$zeroCheck\n")
-                    spaceBeg -= if (zeroCheck.length == digitNumber(part)) 1 else -zeroCheck.length+digitNumber(part)+1
+                    spaceBeg -= if (zeroCheck.length == digitNumber(part)) 1 else -zeroCheck.length + digitNumber(part) + 1
                     it.write("${" ".repeat(spaceBeg)}-$part\n")
                     if (zeroCheck.length != digitNumber(part)) {
                         spaceBeg -= zeroCheck.length - digitNumber(part) - 1
@@ -536,10 +536,12 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
             }
 
             //Составление 3 части заключения
-            subtrahend += part
-            zeroCheck = subtrahend.toString()
-            if (zeroCheck.length != digitNumber(part)+1)
-            spaceBeg -= if (zeroCheck.length == digitNumber(part) || part == 0) 0 else 1
+            if (numRes.size > 1) {
+                subtrahend += part
+                zeroCheck = subtrahend.toString()
+                if (zeroCheck.length != digitNumber(part) + 1)
+                    spaceBeg -= if (zeroCheck.length == digitNumber(part) || part == 0) 0 else 1
+            } else if (digitNumber(lhv) == digitNumber(part) + 1) spaceBeg--
             it.write("${" ".repeat(spaceBeg)}${lhv % rhv}")
         }
     }
