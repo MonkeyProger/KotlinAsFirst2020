@@ -162,23 +162,22 @@ fun bestHighJump(jumps: String): Int {
  */
 fun plusMinus(expression: String): Int {
     var result = 0
-    if (!expression.matches(Regex("^(\\d+(\\s*[+-]\\s*\\d+)*)\$"))) throw IllegalArgumentException("") else {
-        val listStr = expression.split(" ")
-        var n = 0
-        var mod = 1
-        for (i in listStr) {
-            when (i) {
-                "-" -> {
-                    result += n * mod; mod = -1; n = 0
-                }
-                "+" -> {
-                    result += n * mod; mod = 1; n = 0
-                }
-                else -> n += i.toInt()
+    if (!expression.matches(Regex("^(\\d+(\\s*[+-]\\s*\\d+)*)\$"))) throw IllegalArgumentException("")
+    val listStr = expression.split(" ")
+    var n = 0
+    var mod = 1
+    for (i in listStr) {
+        when (i) {
+            "-" -> {
+                result += n * mod; mod = -1; n = 0
             }
+            "+" -> {
+                result += n * mod; mod = 1; n = 0
+            }
+            else -> n += i.toInt()
         }
-        result += n * mod
     }
+    result += n * mod
     return result
 }
 
