@@ -175,7 +175,9 @@ fun plusMinus(expression: String): Int {
                 n = 0
             }
             "+" -> {
-                result += n * mod; mod = 1; n = 0
+                result += n * mod
+                mod = 1
+                n = 0
             }
             else -> n = i.toInt()
         }
