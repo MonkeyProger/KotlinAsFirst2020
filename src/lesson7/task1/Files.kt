@@ -3,6 +3,9 @@
 package lesson7.task1
 
 import lesson3.task1.digitNumber
+import lesson9.task1.Matrix
+import lesson9.task1.MatrixImpl
+import lesson9.task1.createMatrix
 import java.io.File
 
 // Урок 7: работа с файлами
@@ -548,5 +551,77 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
             it.write("${" ".repeat(spaceBeg)}${lhv % rhv}")
         }
     }
+}
+
+//----------Индивидуальное задание----------
+fun victoriousMove(inputName: String, priority: Char): Pair<Int, Int>? {
+
+    //Заполнение таблицы-матрицы для дальнейшего упрощенного перебора
+    val plField = MatrixImpl(15, 15, "")
+    File(inputName).bufferedReader().use {
+        var y = 0
+        it.forEachLine { line ->
+            for (x in 0..14)
+                plField[x, y] = line[x].toString()
+            y++
+        }
+    }
+
+    //Функция проверки диагоналей
+    fun diagonalCheck(turn: String, offsetX: Int, offsetY: Int): Pair<Int, Int>? {
+        var toright = 0
+        var toleft = 0
+        var positionR = -1 to -1
+        var positionL = -1 to -1
+        for (i in 0..4) {
+            when (plField[i + offsetX, i + offsetY]) {
+                turn -> toright++
+                "-" -> positionR = i + offsetX to i + offsetY
+                else -> toright--
+            }
+            when (plField[4 - i + offsetX, i + offsetY]) {
+                turn -> toleft++
+                "-" -> positionL = 4 - i + offsetX to i + offsetY
+                else -> toleft--
+            }
+        }
+        if (toright == 4) return positionR
+        if (toleft == 4) return positionL
+        return null
+    }
+
+    //Функция проверки линий
+    fun stripCheck(turn: String, offsetX: Int, offsetY: Int): Pair<Int, Int>? {
+        var cols = 0
+        var rows = 0
+        var positionC = -1 to -1
+        var positionR = -1 to -1
+        for (x in offsetX..4 + offsetX)
+            for (y in offsetY..4 + offsetY) {
+                when (plField[x, y]) {
+                    turn -> cols++
+                    "-" -> positionC = x to y
+                    else -> cols--
+                }
+                when (plField[y, x]) {
+                    turn -> rows++
+                    "-" -> positionR = y to x
+                    else -> rows--
+                }
+            }
+        if (cols == 4) return positionC
+        if (rows == 4) return positionR
+        return null
+    }
+
+    //Основная часть перебора квадрата 5х5 в квадрате 15х15
+    for (x in 0..9)
+        for (y in 0..9) {
+            val diagonal = diagonalCheck(priority.toString(), x, y)
+            val strip = stripCheck(priority.toString(), x, y)
+            if (diagonal != null) return diagonal
+            if (strip != null) return strip
+        }
+    return null
 }
 

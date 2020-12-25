@@ -441,4 +441,10 @@ Basic, Ruby, Swift.
 
         File("temp.txt").delete()
     }
+
+
+    @Test
+    fun victoriousMove() {
+        assertEquals(14 to 14, victoriousMove("inputTicTacToe.txt", 'x'))
+    }
 }
