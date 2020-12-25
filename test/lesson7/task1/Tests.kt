@@ -445,6 +445,6 @@ Basic, Ruby, Swift.
 
     @Test
     fun victoriousMove() {
-        assertEquals(14 to 14, victoriousMove("inputTicTacToe.txt", 'x'))
+        assertEquals(14 to 0, victoriousMove("victorymove_in.txt", 'x'))
     }
 }

@@ -1,9 +1,9 @@
-oooooooooooooo-
-oooooooooooooxo
-ooooooooooooxoo
-oooooooooooxooo
-ooooooooooxoooo
-ooooooooooooooo
+---------------
+-------------x-
+------------x--
+-----------x---
+----------x----
+---------------
 ---------------
 ---------------
 ---------------

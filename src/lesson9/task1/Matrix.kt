@@ -68,5 +68,10 @@ class MatrixImpl<E>(override val height: Int, override val width: Int, e: E) : M
     override fun equals(other: Any?) = TODO()
 
     override fun toString(): String = TODO()
+    override fun hashCode(): Int {
+        var result = height
+        result = 31 * result + width
+        return result
+    }
 }
 
