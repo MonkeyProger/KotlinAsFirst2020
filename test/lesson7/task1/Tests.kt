@@ -445,6 +445,9 @@ Basic, Ruby, Swift.
 
     @Test
     fun victoriousMove() {
-        assertEquals(14 to 0, victoriousMove("victorymove_in.txt", 'x'))
+        assertEquals(10 to 4, victoriousMove("input/victorymove_in.txt", 'x'))
+        assertEquals(10 to 11, victoriousMove("input/victorymove_in1.txt", 'x'))
+        assertEquals(6 to 5, victoriousMove("input/victorymove_in2.txt", 'o'))
+        assertEquals(null, victoriousMove("input/victorymove_in3.txt", 'o'))
     }
 }
