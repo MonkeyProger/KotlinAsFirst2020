@@ -616,7 +616,7 @@ fun victoriousMove(inputName: String, priority: Char): Pair<Int, Int>? {
         return null
     }
 
-    //Основная часть перебора квадрата 5х5 в квадрате 15х15
+    //Основная часть - перебор квадрата 5х5 в квадрате 15х15
     for (y in 0..10)
         for (x in 0..10) {
             val diagonal = diagonalCheck(priority, x, y)
