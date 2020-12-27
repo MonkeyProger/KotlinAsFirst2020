@@ -589,28 +589,28 @@ fun victoriousMove(inputName: String, priority: Char): Pair<Int, Int>? {
 
     //Функция проверки линий
     fun stripCheck(turn: Char, offsetX: Int, offsetY: Int): Pair<Int, Int>? {
-        var cols: Int
-        var rows: Int
+        var column: Int
+        var row: Int
         var positionC = -1 to -1
         var positionR = -1 to -1
-        for (x in offsetX..4 + offsetX) {
-            rows = 0
-            cols = 0
-            for (y in offsetY..4 + offsetY) {
-                when (plField[y]?.get(x)) {
-                    turn -> cols++
-                    '-' -> positionC = x to y
-                    else -> cols--
-                }
+        for (y in offsetY..4 + offsetY) {
+            row = 0
+            column = 0
+            for (x in offsetX..4 + offsetX) {
                 when (plField[x]?.get(y)) {
-                    turn -> rows++
-                    '-' -> positionR = y to x
-                    else -> rows--
+                    turn -> column++
+                    '-' -> positionC = y to x
+                    else -> column--
+                }
+                when (plField[y]?.get(x)) {
+                    turn -> row++
+                    '-' -> positionR = x to y
+                    else -> row--
                 }
             }
             if (positionC != -1 to -1 && positionR != -1 to -1) {
-                if (cols == 4) return positionC
-                if (rows == 4) return positionR
+                if (column == 4) return positionC
+                if (row == 4) return positionR
             }
         }
         return null
