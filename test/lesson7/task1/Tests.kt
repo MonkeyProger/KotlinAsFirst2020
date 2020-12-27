@@ -442,7 +442,7 @@ Basic, Ruby, Swift.
         File("temp.txt").delete()
     }
 
-
+//-----Индивидуальное задание-----//
     @Test
     fun victoriousMove() {
         assertEquals(10 to 4, victoriousMove("input/victorymove_in.txt", 'x'))

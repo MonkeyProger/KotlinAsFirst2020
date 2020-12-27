@@ -550,7 +550,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     }
 }
 
-//----------Индивидуальное задание----------
+//----------Индивидуальное задание----------//
 fun victoriousMove(inputName: String, priority: Char): Pair<Int, Int>? {
 
     //Заполнение таблицы для дальнейшего упрощенного перебора
